@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>try{if(localStorage.getItem("praeclaris.theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>I Practice It · Praeclaris</title>
+<meta name="description" content="How Praeclaris runs the same systems it teaches: written rules, cited research, risk limits, records and a public build log.">
+<link rel="icon" href="assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-root="." data-page="practice">
+<main id="main">
+<section class="hero" style="padding:60px 0 40px">
+  <div class="wrap">
+    <span class="eyebrow">Field notes</span>
+    <h1>I practice what I teach.</h1>
+    <p class="lead">Teaching crypto safety without living it would be noise. Here's how my own system runs, without the private numbers. Share the method, never the balances: that's one of the rules.</p>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap grid g2">
+    <div class="card"><span class="tag lvl-1">Research</span><h3>Scored research with cited sources</h3><p class="muted">Every asset I study gets a written research note with its sources. Scores are computed from a written formula and left blank until research backs them. Nothing is typed in from a hunch.</p></div>
+    <div class="card"><span class="tag lvl-2">Market view</span><h3>A market-direction model that admits when it's stale</h3><p class="muted">I blend dated judgment pillars (policy, rates, geopolitics, tokenization) with a live price pillar, and I flag when the judgment is out of date instead of trusting the headline number.</p></div>
+    <div class="card"><span class="tag lvl-3">Risk limits</span><h3>Written risk rules that can halt trading</h3><p class="muted">I test strategy in a paper-traded model portfolio with written limits, separation of duties (no one approves their own order) and an automatic halt. When a limit is breached, trading stops until the rules are re-tested. I keep to that, even in a falling market.</p></div>
+    <div class="card"><span class="tag">Records</span><h3>A decision log and a risk register</h3><p class="muted">Major decisions are written down before they're made, with the reasoning and the date. Each risk has a named control. That's the same Operating Manual the Citadel's final trial asks you to write.</p></div>
+  </div>
+</section>
+
+<section class="tight">
+  <div class="wrap">
+    <span class="eyebrow">Public build log</span>
+    <h2>My own progress through the quest</h2>
+    <p class="muted">I'm running the same missions and logging them here honestly, including what's still in progress.</p>
+    <div id="log" class="grid" style="margin-top:18px"></div>
+    <p class="disclaimer" style="margin-top:20px">This log shows practices, not holdings or results. Nothing here is a recommendation to buy or sell anything.</p>
+  </div>
+</section>
+</main>
+<script src="assets/site.js"></script>
+<script src="data/practice-log.js"></script>
+<script>
+(function () {
+  function esc(s) { return String(s || "").replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  var chip = { done: '<span class="tag ok">✓ Done</span>', progress: '<span class="tag info">In progress</span>', planned: '<span class="tag muted">Planned</span>' };
+  document.getElementById("log").innerHTML = (window.PRACTICE_LOG || []).map(function (e) {
+    return '<div class="card" style="display:flex;gap:16px;align-items:flex-start"><div style="min-width:110px">' + (chip[e.status] || "") + '<div class="muted" style="font-size:.85rem">' + esc(e.date) + "</div></div><div><h3 style=\"margin-bottom:4px\">" + esc(e.title) + '</h3><p class="muted" style="margin:0">' + esc(e.note) + "</p></div></div>";
+  }).join("");
+})();
+</script>
+</body>
+</html>

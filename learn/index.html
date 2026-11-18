@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<script>try{if(localStorage.getItem("praeclaris.theme")==="dark")document.documentElement.setAttribute("data-theme","dark")}catch(e){}</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Free Library · Praeclaris</title>
+<meta name="description" content="52 free lessons on blockchain, crypto, business development, wealth creation and sovereignty, in four levels from System Starter to Sovereign Architect.">
+<link rel="icon" href="../assets/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/site.css">
+</head>
+<body data-root=".." data-page="learn">
+<main id="main">
+  <section class="hero" style="padding:60px 0 40px">
+    <div class="wrap">
+      <span class="eyebrow">#Praeclaris52 · Free forever</span>
+      <h1>The Free Library</h1>
+      <p class="lead">52 weekly lessons in four levels. Each one has a plain-English explanation, step-by-step actions, a term, a myth vs. fact, a protection habit and a challenge.</p>
+      <div class="path levels" style="margin-top:26px">
+        <div class="card"><h3>System Starter</h3><p class="muted">Weeks 1–13. Systems, your financial house, blockchain, Bitcoin, wallets, exchanges and scams.</p></div>
+        <div class="card"><h3>System Operator</h3><p class="muted">Weeks 14–26. Credit, budgets, debt, compounding, position sizing, DeFi, records and taxes.</p></div>
+        <div class="card"><h3>System Builder</h3><p class="muted">Weeks 27–39. Business: discovery, pricing, legal foundations, KPIs, marketing, sales, AI and funding.</p></div>
+        <div class="card"><h3>Sovereign Architect</h3><p class="muted">Weeks 40–52. Security, self-custody, privacy, failures, insurance, estate, family governance and policy.</p></div>
+      </div>
+    </div>
+  </section>
+  <section class="tight">
+    <div class="wrap">
+      <div class="filters">
+        <input id="q" type="search" placeholder="Search lessons, e.g. wallet, tax, pricing" aria-label="Search lessons">
+        <select id="lvl" aria-label="Filter by level"><option value="">All levels</option><option value="1">System Starter</option><option value="2">System Operator</option><option value="3">System Builder</option><option value="4">Sovereign Architect</option></select>
+        <select id="pil" aria-label="Filter by pillar"><option value="">All pillars</option></select>
+      </div>
+      <p id="count" class="muted"></p>
+      <div id="list"></div>
+      <p class="disclaimer" id="disc" style="margin-top:30px"></p>
+    </div>
+  </section>
+</main>
+<script src="../assets/site.js"></script>
+<script src="../data/library.js"></script>
+<script>
+(function () {
+  var L = window.PRAECLARIS_LIBRARY, list = document.getElementById("list");
+  function esc(s) { return String(s || "").replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  document.getElementById("disc").textContent = L.disclaimer;
+  var pillars = [];
+  L.lessons.forEach(function (l) { if (pillars.indexOf(l.pillar) < 0) pillars.push(l.pillar); });
+  var pil = document.getElementById("pil");
+  pillars.sort().forEach(function (p) { var o = document.createElement("option"); o.value = p; o.textContent = p; pil.appendChild(o); });
+
+  function card(l) {
+    var src = l.sources.map(function (s) { return s.url ? '<a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + "</a>" : esc(s.title); }).join(" · ");
+    return '<details class="card lesson lv' + l.level + '" id="week-' + l.n + '"><summary><span class="wk">Week ' + l.n + '</span><span><h3 style="margin:0">' + esc(l.theme) + '</h3><span class="meta">' + esc(l.levelName) + " · " + esc(l.pillar) + "</span></span></summary>" +
+      '<div class="body"><p><b class="gold">' + esc(l.principle) + "</b></p><p>" + esc(l.intro) + "</p><h4>Steps</h4><ol>" +
+      l.steps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol>" +
+      '<dl class="kv">' + (l.term ? "<dt class=\"k-term\">Term</dt><dd>" + esc(l.term) + "</dd>" : "") + (l.myth ? "<dt class=\"k-myth\">Myth vs. fact</dt><dd>" + esc(l.myth) + "</dd>" : "") +
+      (l.protect ? "<dt class=\"k-protect\">Protect</dt><dd>" + esc(l.protect) + "</dd>" : "") + (l.challenge ? "<dt class=\"k-challenge\">Challenge</dt><dd>" + esc(l.challenge) + "</dd>" : "") +
+      "<dt class=\"k-take\">Takeaway</dt><dd>" + esc(l.takeaway) + "</dd><dt class=\"k-reflect\">Reflect</dt><dd>" + esc(l.question) + "</dd></dl>" +
+      '<p class="src" style="margin-top:14px">Sources: ' + src + "</p></div></details>";
+  }
+  function draw() {
+    var q = document.getElementById("q").value.toLowerCase().trim(), lv = document.getElementById("lvl").value, p = pil.value;
+    var rows = L.lessons.filter(function (l) {
+      if (lv && String(l.level) !== lv) return false;
+      if (p && l.pillar !== p) return false;
+      if (q && JSON.stringify(l).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    document.getElementById("count").textContent = rows.length + " of " + L.lessons.length + " lessons";
+    list.innerHTML = rows.map(card).join("");
+  }
+  ["q", "lvl"].forEach(function (id) { document.getElementById(id).addEventListener("input", draw); });
+  pil.addEventListener("input", draw);
+  draw();
+  function openHash() {
+    var el = location.hash && document.getElementById(location.hash.slice(1));
+    if (el) { el.open = true; el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+  }
+  window.addEventListener("hashchange", openHash); openHash();
+})();
+</script>
+</body>
+</html>
