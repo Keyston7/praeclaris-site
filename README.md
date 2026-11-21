@@ -10,7 +10,11 @@ A static site (plain HTML, CSS and JavaScript): no build step and no server. It'
 | Navigation and footer (every page) | `assets/site.js` |
 | Colors and fonts | `assets/site.css` (the `:root` block) |
 | Home page | `index.html` |
-| Crypto Quest missions | `data/crypto-quest.js` |
+| Crypto Quest missions (walkthroughs, example screens, worked examples) | `data/crypto-quest.js` |
+| Vocab Vault words | `data/crypto-vocab.js` |
+| Field Guide (exchange/wallet tiers, safety, maintenance, cheat-sheet list) | `data/crypto-guides.js` |
+| Cheat-sheet images | `assets/guides/` |
+| Workbook PDF and transaction-log spreadsheet | `assets/downloads/` (rebuild with `tools/`, see below) |
 | Builder's Guild missions | `data/business-quest.js` |
 | Free library lessons | `data/library.js` (generated, so edit the lesson source and rebuild) |
 | Public build log | `data/practice-log.js` |
@@ -20,6 +24,20 @@ A static site (plain HTML, CSS and JavaScript): no build step and no server. It'
 ## Add a mission
 
 Copy one `{ id: ..., realm: ..., ... }` block in `data/crypto-quest.js`, give it a new unique `id`, set its `realm`, and edit the text. Each quiz `answer` is the 0-based position of the correct option. Save, commit and push. The site updates in about a minute.
+
+Crypto missions can also have `words` (vocabulary terms from `data/crypto-vocab.js`), a `guide` (step-by-step walkthrough; each step can show an example app screen), `example` (worked numbers as a table), `diagram`, `sheets` (cheat-sheet images) and `wb` (the matching workbook page). The comment at the top of `data/crypto-quest.js` explains each field.
+
+## Rebuild the workbook
+
+After changing missions, rebuild the downloadable workbook so it matches:
+
+```
+pip install reportlab openpyxl
+node tools/export-data.js > tools/quest-data.json
+python tools/build_workbook.py
+```
+
+This rewrites `assets/downloads/Praeclaris-Crypto-Quest-Workbook.pdf` (fillable PDF) and `Praeclaris-Crypto-Transaction-Log.xlsx`. To change a mission's fill-in fields, edit `PAGES` in `tools/build_workbook.py`.
 
 ## Color system
 
